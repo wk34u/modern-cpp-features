@@ -1532,9 +1532,9 @@ foo(std::make_unique<T>(), function_that_throws(), std::make_unique<T>());
 
 See the section on [smart pointers (C++11)](#smart-pointers) for more information on `std::unique_ptr` and `std::shared_ptr`.
 
-## C++11 Language Features
+## C++11 语言特性
 
-### Move semantics
+### 移动语义
 Moving an object means to transfer ownership of some resource it manages to another object.
 
 The first benefit of move semantics is performance optimization. When an object is about to reach the end of its lifetime, either because it's a temporary or by explicitly calling `std::move`, a move is often a cheaper way to transfer resources. For example, moving a `std::vector` is just copying some pointers and internal state over to the new vector -- copying would involve having to copy every single contained element in the vector, which is expensive and unnecessary if the old vector will soon be destroyed.
