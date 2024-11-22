@@ -93,8 +93,9 @@ C++14 includes the following new library features:
 - [compile-time integer sequences](#compile-time-integer-sequences)
 - [std::make_unique](#stdmake_unique)
 
-C++11 includes the following new language features:
-- [move semantics](#move-semantics)
+C++11 includes the following new language features:  
+C++11 包括以下新的语言特性：
+- [move semantics (移动语义)](#move-semantics)
 - [variadic templates](#variadic-templates)
 - [rvalue references](#rvalue-references)
 - [forwarding references](#forwarding-references)
@@ -1685,25 +1686,34 @@ foo(std::make_unique<T>(), function_that_throws(), std::make_unique<T>());
 See the section on [smart pointers (C++11)](#smart-pointers) for more information on `std::unique_ptr` and `std::shared_ptr`.
 
 ## C++11 Language Features
+## C++11 语言特性
 
 ### Move semantics
-Moving an object means to transfer ownership of some resource it manages to another object.
+### 移动语义
+Moving an object means to transfer ownership of some resource it manages to another object.  
+移动一个对象意味着将其管理的某些资源的所有权转移给另一个对象。
 
-The first benefit of move semantics is performance optimization. When an object is about to reach the end of its lifetime, either because it's a temporary or by explicitly calling `std::move`, a move is often a cheaper way to transfer resources. For example, moving a `std::vector` is just copying some pointers and internal state over to the new vector -- copying would involve having to copy every single contained element in the vector, which is expensive and unnecessary if the old vector will soon be destroyed.
+The first benefit of move semantics is performance optimization. When an object is about to reach the end of its lifetime, either because it's a temporary or by explicitly calling `std::move`, a move is often a cheaper way to transfer resources. For example, moving a `std::vector` is just copying some pointers and internal state over to the new vector -- copying would involve having to copy every single contained element in the vector, which is expensive and unnecessary if the old vector will soon be destroyed.  
+移动语义的第一个好处是性能优化。当一个对象即将结束其生命周期时，无论是因为它是临时对象，还是因为显式调用了 std::move，移动通常是一种更廉价的资源转移方式。例如，移动一个 std::vector 只需要复制一些指针和内部状态到新的向量中，而拷贝则需要逐个复制向量中包含的每个元素，这样的操作既昂贵又不必要，尤其是在旧的向量即将被销毁的情况下。
 
-Moves also make it possible for non-copyable types such as `std::unique_ptr`s ([smart pointers](#smart-pointers)) to guarantee at the language level that there is only ever one instance of a resource being managed at a time, while being able to transfer an instance between scopes.
+Moves also make it possible for non-copyable types such as `std::unique_ptr`s ([smart pointers](#smart-pointers)) to guarantee at the language level that there is only ever one instance of a resource being managed at a time, while being able to transfer an instance between scopes.  
+移动还使得像 std::unique_ptr（智能指针）这样的不可复制类型能够在语言层面上保证资源在任何时候都只有一个实例被管理，同时还能在不同作用域之间转移实例的所有权。
 
-See the sections on: [rvalue references](#rvalue-references), [special member functions for move semantics](#special-member-functions-for-move-semantics), [`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).
+See the sections on: [rvalue references](#rvalue-references), [special member functions for move semantics](#special-member-functions-for-move-semantics), [`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).  
+请参阅以下章节：[rvalue references(右值引用)](#rvalue-references), [special member functions for move semantics(移动语义的特殊成员函数)](#special-member-functions-for-move-semantics), [`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references(转发引用)`](#forwarding-references).
 
 ### Rvalue references
-C++11 introduces a new reference termed the _rvalue reference_. An rvalue reference to `T`, which is a non-template type parameter (such as `int`, or a user-defined type), is created with the syntax `T&&`. Rvalue references only bind to rvalues.
+### 右值引用
+C++11 introduces a new reference termed the _rvalue reference_. An rvalue reference to `T`, which is a non-template type parameter (such as `int`, or a user-defined type), is created with the syntax `T&&`. Rvalue references only bind to rvalues.  
+C++11 引入了一种新的引用，称为 _右值引用_。右值引用 `T`（非模板类型参数，如 `int` 或用户定义的类型）可以通过语法 `T&&` 创建。右值引用只绑定到右值。
 
-Type deduction with lvalues and rvalues:
+Type deduction with lvalues and rvalues:  
+左值和右值的类型推导：
 ```c++
 int x = 0; // `x` is an lvalue of type `int`
 int& xl = x; // `xl` is an lvalue of type `int&`
 int&& xr = x; // compiler error -- `x` is an lvalue
-int&& xr2 = 0; // `xr2` is an lvalue of type `int&&` -- binds to the rvalue temporary, `0`
+int&& xr2 = 0; // `xr2` is an lvalue of type `int&&` -- binds to the rvalue temporary, `0` (xr2 是类型为 int&& 的左值 —— 绑定到右值临时变量 0)
 
 void f(int& x) {}
 void f(int&& x) {}
@@ -1717,7 +1727,8 @@ f(xr2);           // calls f(int&)
 f(std::move(xr2)); // calls f(int&& x)
 ```
 
-See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).
+See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).  
+参见：[`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).
 
 ### Forwarding references
 Also known (unofficially) as _universal references_. A forwarding reference is created with the syntax `T&&` where `T` is a template type parameter, or using `auto&&`. This enables _perfect forwarding_: the ability to pass arguments while maintaining their value category (e.g. lvalues stay as lvalues, temporaries are forwarded as rvalues).
