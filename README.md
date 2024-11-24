@@ -1731,15 +1731,19 @@ See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding r
 参见：[`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).
 
 ### Forwarding references
-Also known (unofficially) as _universal references_. A forwarding reference is created with the syntax `T&&` where `T` is a template type parameter, or using `auto&&`. This enables _perfect forwarding_: the ability to pass arguments while maintaining their value category (e.g. lvalues stay as lvalues, temporaries are forwarded as rvalues).
+### 转发引用
+Also known (unofficially) as _universal references_. A forwarding reference is created with the syntax `T&&` where `T` is a template type parameter, or using `auto&&`. This enables _perfect forwarding_: the ability to pass arguments while maintaining their value category (e.g. lvalues stay as lvalues, temporaries are forwarded as rvalues).  
+转发引用（非正式地也称为 “通用引用”）是通过 T&& 语法创建的，其中 T 是模板类型参数，或者使用 auto&&。这使得完美转发成为可能：即能够在保持参数值类别的情况下传递参数（例如，左值仍作为左值传递，临时对象作为右值转发）。
 
-Forwarding references allow a reference to bind to either an lvalue or rvalue depending on the type. Forwarding references follow the rules of _reference collapsing_:
+Forwarding references allow a reference to bind to either an lvalue or rvalue depending on the type. Forwarding references follow the rules of _reference collapsing_:  
+转发引用允许引用根据类型绑定到左值或右值。转发引用遵循**引用折叠**的规则：
 * `T& &` becomes `T&`
 * `T& &&` becomes `T&`
 * `T&& &` becomes `T&`
 * `T&& &&` becomes `T&&`
 
-`auto` type deduction with lvalues and rvalues:
+`auto` type deduction with lvalues and rvalues:  
+`auto` 类型推导与左值和右值的关系:
 ```c++
 int x = 0; // `x` is an lvalue of type `int`
 auto&& al = x; // `al` is an lvalue of type `int&` -- binds to the lvalue, `x`
