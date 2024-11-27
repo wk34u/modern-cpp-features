@@ -1737,35 +1737,36 @@ Also known (unofficially) as _universal references_. A forwarding reference is c
 
 Forwarding references allow a reference to bind to either an lvalue or rvalue depending on the type. Forwarding references follow the rules of _reference collapsing_:  
 转发引用允许引用根据类型绑定到左值或右值。转发引用遵循**引用折叠**的规则：
-* `T& &` becomes `T&`
-* `T& &&` becomes `T&`
-* `T&& &` becomes `T&`
-* `T&& &&` becomes `T&&`
+* `T& &` becomes `T&` (`T& &` 折叠为 `T&`)  
+* `T& &&` becomes `T&` (`T& &&` 折叠为 `T&`)  
+* `T&& &` becomes `T&` (`T&& &` 折叠为 `T&`)  
+* `T&& &&` becomes `T&&` (`T&& &&` 折叠为 `T&&`)
 
 `auto` type deduction with lvalues and rvalues:  
 `auto` 类型推导与左值和右值的关系:
 ```c++
-int x = 0; // `x` is an lvalue of type `int`
-auto&& al = x; // `al` is an lvalue of type `int&` -- binds to the lvalue, `x`
-auto&& ar = 0; // `ar` is an lvalue of type `int&&` -- binds to the rvalue temporary, `0`
+int x = 0; // `x` is an lvalue of type `int`(`x` 是一个类型为 `int` 的左值)
+auto&& al = x; // `al` is an lvalue of type `int&` -- binds to the lvalue, `x`(`al` 是一个类型为 `int&` 的左值 -- 绑定到左值 `x`)
+auto&& ar = 0; // `ar` is an lvalue of type `int&&` -- binds to the rvalue temporary, `0`(`ar` 是一个类型为 `int&&` 的左值 —— 绑定到右值临时量 `0`)
 ```
 
-Template type parameter deduction with lvalues and rvalues:
+Template type parameter deduction with lvalues and rvalues:  
+带有左值和右值的模板类型参数推导：  
 ```c++
-// Since C++14 or later:
+// Since C++14 or later: // 从 C++14 开始：
 void f(auto&& t) {
   // ...
 }
 
-// Since C++11 or later:
+// Since C++11 or later: // 从 C++11 开始：
 template <typename T>
 void f(T&& t) {
   // ...
 }
 
 int x = 0;
-f(0); // T is int, deduces as f(int &&) => f(int&&)
-f(x); // T is int&, deduces as f(int& &&) => f(int&)
+f(0); // T is int, deduces as f(int &&) => f(int&&)  // T 为 int，推导为 f(int &&) => f(int&&)
+f(x); // T is int&, deduces as f(int& &&) => f(int&) // T 为 int&，推导为 f(int& &&) => f(int&)
 
 int& y = x;
 f(y); // T is int&, deduces as f(int& &&) => f(int&)
