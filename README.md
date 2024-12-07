@@ -1769,11 +1769,11 @@ f(0); // T is int, deduces as f(int &&) => f(int&&)  // T 为 int，推导为 f(
 f(x); // T is int&, deduces as f(int& &&) => f(int&) // T 为 int&，推导为 f(int& &&) => f(int&)
 
 int& y = x;
-f(y); // T is int&, deduces as f(int& &&) => f(int&)
+f(y); // T is int&, deduces as f(int& &&) => f(int&) // T 为 int&, 推导为 f(int& &&) => f(int&)
 
-int&& z = 0; // NOTE: `z` is an lvalue with type `int&&`.
-f(z); // T is int&, deduces as f(int& &&) => f(int&)
-f(std::move(z)); // T is int, deduces as f(int &&) => f(int&&)
+int&& z = 0; // NOTE: `z` is an lvalue with type `int&&`. // 注意：`z` 是一个类型为 `int&&` 的左值。
+f(z); // T is int&, deduces as f(int& &&) => f(int&) // T 是 int&，推导为 f(int& &&) => f(int&)。
+f(std::move(z)); // T is int, deduces as f(int &&) => f(int&&) // T 是 int, 推导为 f(int &&) => f(int&&)
 ```
 
 See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue references`](#rvalue-references).
