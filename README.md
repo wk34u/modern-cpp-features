@@ -1728,7 +1728,7 @@ f(std::move(xr2)); // calls f(int&& x)
 ```
 
 See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).  
-参见：[`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).
+参考：[`std::move`](#stdmove), [`std::forward`](#stdforward), [`forwarding references`](#forwarding-references).
 
 ### Forwarding references
 ### 转发引用
@@ -1776,7 +1776,8 @@ f(z); // T is int&, deduces as f(int& &&) => f(int&) // T 是 int&，推导为 f
 f(std::move(z)); // T is int, deduces as f(int &&) => f(int&&) // T 是 int, 推导为 f(int &&) => f(int&&)
 ```
 
-See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue references`](#rvalue-references).
+See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue references`](#rvalue-references).  
+参考: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue references`](#rvalue-references).  
 
 ### Variadic templates
 The `...` syntax creates a _parameter pack_ or expands one. A template _parameter pack_ is a template parameter that accepts zero or more template arguments (non-types, types, or templates). A template with at least one parameter pack is called a _variadic template_.
