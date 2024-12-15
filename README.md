@@ -1780,7 +1780,9 @@ See also: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue refer
 参考: [`std::move`](#stdmove), [`std::forward`](#stdforward), [`rvalue references`](#rvalue-references).  
 
 ### Variadic templates
-The `...` syntax creates a _parameter pack_ or expands one. A template _parameter pack_ is a template parameter that accepts zero or more template arguments (non-types, types, or templates). A template with at least one parameter pack is called a _variadic template_.
+### 可变参数模板
+The `...` syntax creates a _parameter pack_ or expands one. A template _parameter pack_ is a template parameter that accepts zero or more template arguments (non-types, types, or templates). A template with at least one parameter pack is called a _variadic template_.  
+`...` 语法用于创建`参数包`或展开`参数包`。`模板参数包`是一个模板参数，它可以接受零个或多个模板参数（包括非类型、类型或模板）。包含至少一个参数包的模板称为可变参数模板。  
 ```c++
 template <typename... T>
 struct arity {
@@ -1790,7 +1792,8 @@ static_assert(arity<>::value == 0);
 static_assert(arity<char, short, int>::value == 3);
 ```
 
-An interesting use for this is creating an _initializer list_ from a _parameter pack_ in order to iterate over variadic function arguments.
+An interesting use for this is creating an _initializer list_ from a _parameter pack_ in order to iterate over variadic function arguments.  
+一个有趣的用法是通过`参数包`创建一个`初始化列表`，以便迭代可变参数函数的参数。
 ```c++
 template <typename First, typename... Args>
 auto sum(const First first, const Args... args) -> decltype(first) {
@@ -1958,7 +1961,8 @@ Attributes provide a universal syntax over `__attribute__(...)`, `__declspec`, e
 ```
 
 ### constexpr
-Constant expressions are expressions that are *possibly* evaluated by the compiler at compile-time. Only non-complex computations can be carried out in a constant expression (these rules are progressively relaxed in later versions). Use the `constexpr` specifier to indicate the variable, function, etc. is a constant expression.
+Constant expressions are expressions that are *possibly* evaluated by the compiler at compile-time. Only non-complex computations can be carried out in a constant expression (these rules are progressively relaxed in later versions). Use the `constexpr` specifier to indicate the variable, function, etc. is a constant expression.  
+常量表达式是指*可能*由编译器在编译时计算的表达式。在常量表达式中，只能执行非复杂的计算（这些规则在后续版本中逐步放宽）。可以使用 constexpr 说明符来指示变量、函数等是一个常量表达式。
 ```c++
 constexpr int square(int x) {
   return x * x;
@@ -1974,15 +1978,18 @@ int b = square2(2); // mov edi, 2
                     // call square2(int)
                     // mov DWORD PTR [rbp-8], eax
 ```
-In the previous snippet, notice that the computation when calling `square` is carried out at compile-time, and then the result is embedded in the code generation, while `square2` is called at run-time.
+In the previous snippet, notice that the computation when calling `square` is carried out at compile-time, and then the result is embedded in the code generation, while `square2` is called at run-time.  
+在前面的代码片段中，请注意调用`square`时的计算是在编译时完成的，计算结果会嵌入到代码生成中，而`square2`的调用则是在运行时执行的。
 
-`constexpr` values are those that the compiler can evaluate, but are not guaranteed to, at compile-time:
+`constexpr` values are those that the compiler can evaluate, but are not guaranteed to, at compile-time:  
+`constexpr` 的值是指编译器可以在编译时计算的值，但并不保证一定会在编译时计算：
 ```c++
 const int x = 123;
-constexpr const int& y = x; // error -- constexpr variable `y` must be initialized by a constant expression
+constexpr const int& y = x; // error -- constexpr variable `y` must be initialized by a constant expression -- constexpr 变量 `y` 必须由常量表达式初始化
 ```
 
-Constant expressions with classes:
+Constant expressions with classes:  
+类中的常量表达式：
 ```c++
 struct Complex {
   constexpr Complex(double r, double i) : re{r}, im{i} { }
