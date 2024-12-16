@@ -1807,7 +1807,8 @@ sum(1.5, 2.0, 3.7); // 7.2
 ```
 
 ### Initializer lists
-A lightweight array-like container of elements created using a "braced list" syntax. For example, `{ 1, 2, 3 }` creates a sequences of integers, that has type `std::initializer_list<int>`. Useful as a replacement to passing a vector of objects to a function.
+A lightweight array-like container of elements created using a "braced list" syntax. For example, `{ 1, 2, 3 }` creates a sequences of integers, that has type `std::initializer_list<int>`. Useful as a replacement to passing a vector of objects to a function.  
+一个使用“花括号列表”语法创建的轻量级数组容器。例如，`{ 1, 2, 3 }` 创建了一个整数序列，其类型为 `std::initializer_list<int>`。这在用作函数参数时，是替代传递对象向量的有用方式。
 ```c++
 int sum(const std::initializer_list<int>& list) {
   int total = 0;
