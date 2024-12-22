@@ -1826,7 +1826,8 @@ sum({}); // == 0
 ```
 
 ### Static assertions
-Assertions that are evaluated at compile-time.
+Assertions that are evaluated at compile-time.  
+在编译时进行求值的断言。  
 ```c++
 constexpr int x = 0;
 constexpr int y = 1;
@@ -1834,7 +1835,8 @@ static_assert(x == y, "x != y");
 ```
 
 ### auto
-`auto`-typed variables are deduced by the compiler according to the type of their initializer.
+`auto`-typed variables are deduced by the compiler according to the type of their initializer.  
+由 `auto` 声明的变量会根据其初始化器的类型由编译器进行类型推导。  
 ```c++
 auto a = 3.14; // double
 auto b = 1; // int
@@ -1849,7 +1851,8 @@ auto l = 1, m = true, n = 1.61; // error -- `l` deduced to be int, `m` is bool
 auto o; // error -- `o` requires initializer
 ```
 
-Extremely useful for readability, especially for complicated types:
+Extremely useful for readability, especially for complicated types:  
+对于复杂类型来说，这对于代码可读性非常有用：  
 ```c++
 std::vector<int> v = ...;
 std::vector<int>::const_iterator cit = v.cbegin();
@@ -1857,7 +1860,8 @@ std::vector<int>::const_iterator cit = v.cbegin();
 auto cit = v.cbegin();
 ```
 
-Functions can also deduce the return type using `auto`. In C++11, a return type must be specified either explicitly, or using `decltype` like so:
+Functions can also deduce the return type using `auto`. In C++11, a return type must be specified either explicitly, or using `decltype` like so:  
+函数也可以使用 `auto` 推导返回类型。在 C++11 中，返回类型必须显式指定，或者使用 `decltype` 来推导，示例如下：  
 ```c++
 template <typename X, typename Y>
 auto add(X x, Y y) -> decltype(x + y) {
@@ -1867,15 +1871,18 @@ add(1, 2); // == 3
 add(1, 2.0); // == 3.0
 add(1.5, 1.5); // == 3.0
 ```
-The trailing return type in the above example is the _declared type_ (see section on [`decltype`](#decltype)) of the expression `x + y`. For example, if `x` is an integer and `y` is a double, `decltype(x + y)` is a double. Therefore, the above function will deduce the type depending on what type the expression `x + y` yields. Notice that the trailing return type has access to its parameters, and `this` when appropriate.
+The trailing return type in the above example is the _declared type_ (see section on [`decltype`](#decltype)) of the expression `x + y`. For example, if `x` is an integer and `y` is a double, `decltype(x + y)` is a double. Therefore, the above function will deduce the type depending on what type the expression `x + y` yields. Notice that the trailing return type has access to its parameters, and `this` when appropriate.  
+上面示例中的尾置返回类型是表达式 `x + y` 的 _声明类型_（详见 [`decltype`](#decltype) 章节）。例如，如果 `x` 是整数而 `y` 是双精度浮点数，那么 `decltype(x + y)` 的类型为 `double`。因此，上述函数会根据表达式 `x + y` 所产生的类型来推导返回类型。需要注意的是，尾置返回类型可以访问函数的参数，当合适时也可以访问 `this` 指针。  
 
 ### Lambda expressions
-A `lambda` is an unnamed function object capable of capturing variables in scope. It features: a _capture list_; an optional set of parameters with an optional trailing return type; and a body. Examples of capture lists:
-* `[]` - captures nothing.
-* `[=]` - capture local objects (local variables, parameters) in scope by value.
-* `[&]` - capture local objects (local variables, parameters) in scope by reference.
-* `[this]` - capture `this` by reference.
-* `[a, &b]` - capture objects `a` by value, `b` by reference.
+### Lambda 表达式
+A `lambda` is an unnamed function object capable of capturing variables in scope. It features: a _capture list_; an optional set of parameters with an optional trailing return type; and a body. Examples of capture lists:  
+`lambda` 是一种能够捕获作用域内变量的匿名函数对象。它具有以下特性：**捕获列表**；可选的参数集以及可选的尾随返回类型；以及函数体。以下是一些捕获列表的示例：  
+* `[]` - captures nothing.  不捕获任何变量
+* `[=]` - capture local objects (local variables, parameters) in scope by value. 按值捕获作用域内的局部对象（局部变量、参数）。
+* `[&]` - capture local objects (local variables, parameters) in scope by reference. 按引用捕获作用域内的局部对象（局部变量、参数）。
+* `[this]` - capture `this` by reference. 按引用捕获当前对象的 `this` 指针。  
+* `[a, &b]` - capture objects `a` by value, `b` by reference. 按值捕获对象 `a`，按引用捕获对象 `b`。  
 
 ```c++
 int x = 1;
@@ -1889,28 +1896,30 @@ addX(1); // == 2
 auto getXRef = [&]() -> int& { return x; };
 getXRef(); // int& to `x`
 ```
-By default, value-captures cannot be modified inside the lambda because the compiler-generated method is marked as `const`. The `mutable` keyword allows modifying captured variables. The keyword is placed after the parameter-list (which must be present even if it is empty).
+By default, value-captures cannot be modified inside the lambda because the compiler-generated method is marked as `const`. The `mutable` keyword allows modifying captured variables. The keyword is placed after the parameter-list (which must be present even if it is empty).  
+默认情况下，在 Lambda 表达式中捕获的值是无法被修改的，因为编译器生成的方法被标记为 const。通过使用 mutable 关键字，可以允许修改捕获的变量。这个关键字需要放在参数列表之后（即使参数列表为空，也必须存在）。  
 ```c++
 int x = 1;
 
-auto f1 = [&x] { x = 2; }; // OK: x is a reference and modifies the original
+auto f1 = [&x] { x = 2; }; // OK: x is a reference and modifies the original // OK: x 是一个引用，修改的是原始值。
 
-auto f2 = [x] { x = 2; }; // ERROR: the lambda can only perform const-operations on the captured value
+auto f2 = [x] { x = 2; }; // ERROR: the lambda can only perform const-operations on the captured value // ERROR: Lambda 表达式只能对捕获的值执行 const 操作。
 // vs.
-auto f3 = [x]() mutable { x = 2; }; // OK: the lambda can perform any operations on the captured value
+auto f3 = [x]() mutable { x = 2; }; // OK: the lambda can perform any operations on the captured value // OK: Lambda 表达式可以对捕获的值执行任意操作。
 ```
 
 ### decltype
-`decltype` is an operator which returns the _declared type_ of an expression passed to it. cv-qualifiers and references are maintained if they are part of the expression. Examples of `decltype`:
+`decltype` is an operator which returns the _declared type_ of an expression passed to it. cv-qualifiers and references are maintained if they are part of the expression. Examples of `decltype`:  
+`decltype` 是一个操作符，用于返回传递给它的表达式的**声明类型**。如果表达式中包含 **cv 限定符（const/volatile 限定符）** 和 **引用类型**，这些属性会被保留。以下是 `decltype` 的一些示例：  
 ```c++
-int a = 1; // `a` is declared as type `int`
-decltype(a) b = a; // `decltype(a)` is `int`
-const int& c = a; // `c` is declared as type `const int&`
-decltype(c) d = a; // `decltype(c)` is `const int&`
-decltype(123) e = 123; // `decltype(123)` is `int`
-int&& f = 1; // `f` is declared as type `int&&`
-decltype(f) g = 1; // `decltype(f) is `int&&`
-decltype((a)) h = g; // `decltype((a))` is int&
+int a = 1; // `a` is declared as type `int`  // `a` 被声明为类型 `int`
+decltype(a) b = a; // `decltype(a)` is `int`  // `decltype(a)` 是 `int`
+const int& c = a; // `c` is declared as type `const int&`  // `c` 被声明为类型 `const int&`
+decltype(c) d = a; // `decltype(c)` is `const int&`  // `decltype(c)` 是 `const int&`
+decltype(123) e = 123; // `decltype(123)` is `int`  // `decltype(123)` 是 `int`
+int&& f = 1; // `f` is declared as type `int&&` // `f` 被声明为类型 `int&&`
+decltype(f) g = 1; // `decltype(f) is `int&&`  // `decltype(f)` 是 `int&&`
+decltype((a)) h = g; // `decltype((a))` is int&  // `decltype((a))` 是 `int&`
 ```
 ```c++
 template <typename X, typename Y>
@@ -1920,10 +1929,13 @@ auto add(X x, Y y) -> decltype(x + y) {
 add(1, 2.0); // `decltype(x + y)` => `decltype(3.0)` => `double`
 ```
 
-See also: [`decltype(auto) (C++14)`](#decltypeauto).
+See also: [`decltype(auto) (C++14)`](#decltypeauto).  
+参考: [`decltype(auto) (C++14)`](#decltypeauto).  
 
 ### Type aliases
-Semantically similar to using a `typedef` however, type aliases with `using` are easier to read and are compatible with templates.
+### 类型别名
+Semantically similar to using a `typedef` however, type aliases with `using` are easier to read and are compatible with templates.  
+语义上类似于使用 `typedef`，但是使用 `using` 的类型别名更易于阅读，并且与模板兼容。  
 ```c++
 template <typename T>
 using Vec = std::vector<T>;
@@ -1934,7 +1946,9 @@ String s {"foo"};
 ```
 
 ### nullptr
-C++11 introduces a new null pointer type designed to replace C's `NULL` macro. `nullptr` itself is of type `std::nullptr_t` and can be implicitly converted into pointer types, and unlike `NULL`, not convertible to integral types except `bool`.
+### nullptr
+C++11 introduces a new null pointer type designed to replace C's `NULL` macro. `nullptr` itself is of type `std::nullptr_t` and can be implicitly converted into pointer types, and unlike `NULL`, not convertible to integral types except `bool`.  
+C++11 引入了一种新的空指针类型，用于替代 C 语言中的 `NULL` 宏。`nullptr` 本身的类型是 `std::nullptr_t`，它可以隐式转换为指针类型，但与 `NULL` 不同的是，它不能转换为整型（除了 `bool`）。  
 ```c++
 void foo(int);
 void foo(char*);
@@ -1943,7 +1957,9 @@ foo(nullptr); // calls foo(char*)
 ```
 
 ### Strongly-typed enums
-Type-safe enums that solve a variety of problems with C-style enums including: implicit conversions, inability to specify the underlying type, scope pollution.
+### 强类型枚举
+Type-safe enums that solve a variety of problems with C-style enums including: implicit conversions, inability to specify the underlying type, scope pollution.  
+类型安全的枚举，解决了 C 风格枚举中的多种问题，包括：隐式转换、无法指定底层类型以及作用域污染。  
 ```c++
 // Specifying underlying type as `unsigned int`
 enum class Color : unsigned int { Red = 0xff0000, Green = 0xff00, Blue = 0xff };
@@ -1953,7 +1969,9 @@ Color c = Color::Red;
 ```
 
 ### Attributes
-Attributes provide a universal syntax over `__attribute__(...)`, `__declspec`, etc.
+### Attributes
+Attributes provide a universal syntax over `__attribute__(...)`, `__declspec`, etc.  
+Attributes 提供了一种通用语法，用于统一替代 `__attribute__(...)`、`__declspec` 等。
 ```c++
 // `noreturn` attribute indicates `f` doesn't return.
 [[ noreturn ]] void f() {
@@ -2006,7 +2024,9 @@ constexpr Complex I(0, 1);
 ```
 
 ### Delegating constructors
-Constructors can now call other constructors in the same class using an initializer list.
+### 委托构造函数
+Constructors can now call other constructors in the same class using an initializer list.  
+构造函数现在可以通过初始化列表调用同一类中的其他构造函数。  
 ```c++
 struct Foo {
   int foo;
@@ -2122,14 +2142,17 @@ y = x; // error -- operator= deleted
 ```
 
 ### Range-based for loops
-Syntactic sugar for iterating over a container's elements.
+### 基于范围的 for 循环
+Syntactic sugar for iterating over a container's elements.  
+用于迭代容器元素的语法糖。  
 ```c++
 std::array<int, 5> a {1, 2, 3, 4, 5};
 for (int& x : a) x *= 2;
 // a == { 2, 4, 6, 8, 10 }
 ```
 
-Note the difference when using `int` as opposed to `int&`:
+Note the difference when using `int` as opposed to `int&`:  
+注意使用 `int` 与 `int&` 的区别:  
 ```c++
 std::array<int, 5> a {1, 2, 3, 4, 5};
 for (int x : a) x *= 2;
@@ -2293,7 +2316,9 @@ std::move(foo2).getBar(); // calls `const Bar&& Foo::getBar() const&`
 ```
 
 ### Trailing return types
-C++11 allows functions and lambdas an alternative syntax for specifying their return types.
+### 尾置返回类型
+C++11 allows functions and lambdas an alternative syntax for specifying their return types.  
+C++11 允许函数和 Lambda 表达式使用一种替代语法来指定它们的返回类型。  
 ```c++
 int f() {
   return 123;
@@ -2308,21 +2333,23 @@ auto g = []() -> int {
   return 123;
 };
 ```
-This feature is especially useful when certain return types cannot be resolved:
+This feature is especially useful when certain return types cannot be resolved:  
+此特性在某些返回类型无法直接确定时特别有用：  
 ```c++
-// NOTE: This does not compile!
+// NOTE: This does not compile!  // 注意：此代码无法编译！
 template <typename T, typename U>
 decltype(a + b) add(T a, U b) {
     return a + b;
 }
 
-// Trailing return types allows this:
+// Trailing return types allows this: // 尾置返回类型使以下代码成为可能：
 template <typename T, typename U>
 auto add(T a, U b) -> decltype(a + b) {
     return a + b;
 }
 ```
-In C++14, [`decltype(auto) (C++14)`](#decltypeauto) can be used instead.
+In C++14, [`decltype(auto) (C++14)`](#decltypeauto) can be used instead.  
+在 C++14 中，可以使用 [`decltype(auto) (C++14)`](#decltypeauto) 来代替。
 
 ### Noexcept specifier
 The `noexcept` specifier specifies whether a function could throw exceptions. It is an improved version of `throw()`.
