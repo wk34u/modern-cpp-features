@@ -2038,19 +2038,24 @@ Foo foo;
 foo.foo; // == 0
 ```
 
-### User-defined literals
-User-defined literals allow you to extend the language and add your own syntax. To create a literal, define a `T operator "" X(...) { ... }` function that returns a type `T`, with a name `X`. Note that the name of this function defines the name of the literal. Any literal names not starting with an underscore are reserved and won't be invoked. There are rules on what parameters a user-defined literal function should accept, according to what type the literal is called on.
+### User-defined literals  
+### 用户定义字面量  
+User-defined literals allow you to extend the language and add your own syntax. To create a literal, define a `T operator "" X(...) { ... }` function that returns a type `T`, with a name `X`. Note that the name of this function defines the name of the literal. Any literal names not starting with an underscore are reserved and won't be invoked. There are rules on what parameters a user-defined literal function should accept, according to what type the literal is called on.  
+用户自定义字面量允许您扩展语言并添加自定义语法。要创建一个字面量，可以定义一个 T operator "" X(...) { ... } 函数，该函数返回类型 T，名称为 X。需要注意的是，此函数的名称决定了字面量的名称。任何名称不以下划线 _ 开头的字面量名称是保留的，不会被调用。根据字面量调用的类型，对用户自定义字面量函数可以接受的参数有一些规则限制。
 
-Converting Celsius to Fahrenheit:
+Converting Celsius to Fahrenheit:  
+将摄氏度转换为华氏度：
 ```c++
 // `unsigned long long` parameter required for integer literal.
+// 整数字面量需要使用 `unsigned long long` 参数。
 long long operator "" _celsius(unsigned long long tempCelsius) {
   return std::llround(tempCelsius * 1.8 + 32);
 }
 24_celsius; // == 75
 ```
 
-String to integer conversion:
+String to integer conversion:  
+字符串到整数的转换:
 ```c++
 // `const char*` and `std::size_t` required as parameters.
 int operator "" _int(const char* str, std::size_t) {
@@ -2061,7 +2066,9 @@ int operator "" _int(const char* str, std::size_t) {
 ```
 
 ### Explicit virtual overrides
-Specifies that a virtual function overrides another virtual function. If the virtual function does not override a parent's virtual function, throws a compiler error.
+### 显式虚函数重写
+Specifies that a virtual function overrides another virtual function. If the virtual function does not override a parent's virtual function, throws a compiler error.  
+指定一个虚函数重写另一个虚函数。如果该虚函数没有重写父类的虚函数，则会抛出编译器错误。  
 ```c++
 struct A {
   virtual void foo();
@@ -2076,7 +2083,9 @@ struct B : A {
 ```
 
 ### Final specifier
-Specifies that a virtual function cannot be overridden in a derived class or that a class cannot be inherited from.
+### final 说明符
+Specifies that a virtual function cannot be overridden in a derived class or that a class cannot be inherited from.  
+指定虚函数不能在派生类中被重写，或者指定一个类不能被继承。  
 ```c++
 struct A {
   virtual void foo();
@@ -2087,18 +2096,21 @@ struct B : A {
 };
 
 struct C : B {
-  virtual void foo(); // error -- declaration of 'foo' overrides a 'final' function
+  virtual void foo(); // error -- declaration of 'foo' overrides a 'final' function // 错误 -- 对 'foo' 的声明重写了一个被标记为 'final' 的函数。
 };
 ```
 
-Class cannot be inherited from.
+Class cannot be inherited from.  
+类不能被继承。  
 ```c++
 struct A final {};
-struct B : A {}; // error -- base 'A' is marked 'final'
+struct B : A {}; // error -- base 'A' is marked 'final' // 错误 -- 基类 'A' 被标记为 'final'
 ```
 
 ### Default functions
-A more elegant, efficient way to provide a default implementation of a function, such as a constructor.
+### 默认函数
+A more elegant, efficient way to provide a default implementation of a function, such as a constructor.  
+一种更优雅、高效的方式来提供函数（例如构造函数）的默认实现。  
 ```c++
 struct A {
   A() = default;
@@ -2109,7 +2121,8 @@ A a; // a.x == 1
 A a2 {123}; // a.x == 123
 ```
 
-With inheritance:
+With inheritance:  
+使用继承：  
 ```c++
 struct B {
   B() : x{1} {}
@@ -2125,7 +2138,9 @@ C c; // c.x == 1
 ```
 
 ### Deleted functions
-A more elegant, efficient way to provide a deleted implementation of a function. Useful for preventing copies on objects.
+### 删除函数
+A more elegant, efficient way to provide a deleted implementation of a function. Useful for preventing copies on objects.  
+一种更优雅、高效的方法来提供函数的删除实现，用于防止对象的拷贝。  
 ```c++
 class A {
   int x;
@@ -2137,8 +2152,8 @@ public:
 };
 
 A x {123};
-A y = x; // error -- call to deleted copy constructor
-y = x; // error -- operator= deleted
+A y = x; // error -- call to deleted copy constructor // 错误 -- 调用已删除的拷贝构造函数
+y = x; // error -- operator= deleted // 错误 -- 赋值运算符已删除
 ```
 
 ### Range-based for loops
@@ -2159,8 +2174,10 @@ for (int x : a) x *= 2;
 // a == { 1, 2, 3, 4, 5 }
 ```
 
-### Special member functions for move semantics
-The copy constructor and copy assignment operator are called when copies are made, and with C++11's introduction of move semantics, there is now a move constructor and move assignment operator for moves.
+### Special member functions for move semantics  
+### 用于移动语义的特殊成员函数
+The copy constructor and copy assignment operator are called when copies are made, and with C++11's introduction of move semantics, there is now a move constructor and move assignment operator for moves.  
+拷贝构造函数和拷贝赋值运算符在进行拷贝时会被调用，而随着 C++11 引入了移动语义，现在还增加了用于移动操作的移动构造函数和移动赋值运算符。  
 ```c++
 struct A {
   std::string s;
@@ -2177,11 +2194,11 @@ A f(A a) {
   return a;
 }
 
-A a1 = f(A{}); // move-constructed from rvalue temporary
-A a2 = std::move(a1); // move-constructed using std::move
+A a1 = f(A{}); // move-constructed from rvalue temporary // 从右值临时对象移动构造
+A a2 = std::move(a1); // move-constructed using std::move // 使用 `std::move` 进行移动构造
 A a3 = A{};
-a2 = std::move(a3); // move-assignment using std::move
-a1 = f(A{}); // move-assignment from rvalue temporary
+a2 = std::move(a3); // move-assignment using std::move // 使用 `std::move` 进行移动赋值
+a1 = f(A{}); // move-assignment from rvalue temporary // 从右值临时对象进行移动赋值
 ```
 
 ### Converting constructors
