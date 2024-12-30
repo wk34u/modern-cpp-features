@@ -2202,7 +2202,9 @@ a1 = f(A{}); // move-assignment from rvalue temporary // 从右值临时对象�
 ```
 
 ### Converting constructors
-Converting constructors will convert values of braced list syntax into constructor arguments.
+### 转换构造函数
+Converting constructors will convert values of braced list syntax into constructor arguments.  
+转换构造函数会将大括号列表语法的值转换为构造函数的参数。  
 ```c++
 struct A {
   A(int) {}
