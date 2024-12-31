@@ -2219,16 +2219,18 @@ A d {0, 0, 0}; // calls A::A(int, int, int)
 ```
 
 Note that the braced list syntax does not allow narrowing:
+请注意，大括号列表语法不允许窄化转换。  
 ```c++
 struct A {
   A(int) {}
 };
 
 A a(1.1); // OK
-A b {1.1}; // Error narrowing conversion from double to int
+A b {1.1}; // Error narrowing conversion from double to int // 错误：从 `double` 窄化转换为 `int`。
 ```
 
-Note that if a constructor accepts a `std::initializer_list`, it will be called instead:
+Note that if a constructor accepts a `std::initializer_list`, it will be called instead:  
+请注意，如果构造函数接受一个 `std::initializer_list`，则会优先调用该构造函数。  
 ```c++
 struct A {
   A(int) {}
@@ -2244,7 +2246,9 @@ A d {0, 0, 0}; // calls A::A(std::initializer_list<int>)
 ```
 
 ### Explicit conversion functions
-Conversion functions can now be made explicit using the `explicit` specifier.
+### 显式转换函数  
+Conversion functions can now be made explicit using the `explicit` specifier.  
+可以使用 `explicit` 说明符显式定义转换函数。  
 ```c++
 struct A {
   operator bool() const { return true; }
@@ -2255,12 +2259,12 @@ struct B {
 };
 
 A a;
-if (a); // OK calls A::operator bool()
-bool ba = a; // OK copy-initialization selects A::operator bool()
+if (a); // OK calls A::operator bool() // OK 调用 A::operator bool()
+bool ba = a; // OK copy-initialization selects A::operator bool() // OK 拷贝初始化选择了 `A::operator bool()`。
 
 B b;
-if (b); // OK calls B::operator bool()
-bool bb = b; // error copy-initialization does not consider B::operator bool()
+if (b); // OK calls B::operator bool() // OK 调用 B::operator bool()
+bool bb = b; // error copy-initialization does not consider B::operator bool() // 错误：拷贝初始化不会考虑 `B::operator bool()`。
 ```
 ### Inline namespaces
 All members of an inline namespace are treated as if they were part of its parent namespace, allowing specialization of functions and easing the process of versioning. This is a transitive property, if A contains B, which in turn contains C and both B and C are inline namespaces, C's members can be used as if they were on A.
