@@ -2267,8 +2267,9 @@ if (b); // OK calls B::operator bool() // OK 调用 B::operator bool()
 bool bb = b; // error copy-initialization does not consider B::operator bool() // 错误：拷贝初始化不会考虑 `B::operator bool()`。
 ```
 ### Inline namespaces
-All members of an inline namespace are treated as if they were part of its parent namespace, allowing specialization of functions and easing the process of versioning. This is a transitive property, if A contains B, which in turn contains C and both B and C are inline namespaces, C's members can be used as if they were on A.
-
+### 内联命名空间
+All members of an inline namespace are treated as if they were part of its parent namespace, allowing specialization of functions and easing the process of versioning. This is a transitive property, if A contains B, which in turn contains C and both B and C are inline namespaces, C's members can be used as if they were on A.  
+内联命名空间的所有成员会被视为其父命名空间的一部分，这允许函数特化并简化版本控制的过程。这是一种传递属性：如果命名空间 A 包含命名空间 B，且 B 又包含命名空间 C，并且 B 和 C 都是内联命名空间，那么 C 的成员可以像在命名空间 A 中一样被使用。
 ```c++
 namespace Program {
   namespace Version1 {
@@ -2280,22 +2281,24 @@ namespace Program {
   }
 }
 
-int version {Program::getVersion()};              // Uses getVersion() from Version2
-int oldVersion {Program::Version1::getVersion()}; // Uses getVersion() from Version1
-bool firstVersion {Program::isFirstVersion()};    // Does not compile when Version2 is added
+int version {Program::getVersion()};              // Uses getVersion() from Version2 // 使用来自 Version2 的 getVersion() 方法
+int oldVersion {Program::Version1::getVersion()}; // Uses getVersion() from Version1 // 使用来自 Version1 的 getVersion() 方法
+bool firstVersion {Program::isFirstVersion()};    // Does not compile when Version2 is added // 当添加 Version2 时无法编译
 ```
 
 ### Non-static data member initializers
-Allows non-static data members to be initialized where they are declared, potentially cleaning up constructors of default initializations.
+### 非静态成员变量的初始化
+Allows non-static data members to be initialized where they are declared, potentially cleaning up constructors of default initializations.  
+允许在声明非静态成员变量时直接进行初始化，这样可以简化构造函数中的默认初始化代码。
 
 ```c++
-// Default initialization prior to C++11
+// Default initialization prior to C++11 // C++11 之前的默认初始化
 class Human {
     Human() : age{0} {}
   private:
     unsigned age;
 };
-// Default initialization on C++11
+// Default initialization on C++11 // C++11 中的默认初始化
 class Human {
   private:
     unsigned age {0};
@@ -2303,7 +2306,9 @@ class Human {
 ```
 
 ### Right angle brackets
-C++11 is now able to infer when a series of right angle brackets is used as an operator or as a closing statement of typedef, without having to add whitespace.
+### 右角括号
+C++11 is now able to infer when a series of right angle brackets is used as an operator or as a closing statement of typedef, without having to add whitespace.  
+在 C++11 中，编译器现在可以自动判断一连串的右尖括号是用作操作符还是用来结束 typedef 声明，而不需要特意添加空格。
 
 ```c++
 typedef std::map<int, std::map <int, std::map <int, int> > > cpp98LongTypedef;
@@ -2311,7 +2316,9 @@ typedef std::map<int, std::map <int, std::map <int, int>>>   cpp11LongTypedef;
 ```
 
 ### Ref-qualified member functions
-Member functions can now be qualified depending on whether `*this` is an lvalue or rvalue reference.
+### 限定引用的成员函数
+Member functions can now be qualified depending on whether `*this` is an lvalue or rvalue reference.  
+现在可以根据 `*this` 是左值引用还是右值引用，对成员函数进行限定。
 
 ```c++
 struct Bar {
@@ -2375,44 +2382,54 @@ In C++14, [`decltype(auto) (C++14)`](#decltypeauto) can be used instead.
 在 C++14 中，可以使用 [`decltype(auto) (C++14)`](#decltypeauto) 来代替。
 
 ### Noexcept specifier
-The `noexcept` specifier specifies whether a function could throw exceptions. It is an improved version of `throw()`.
+### Noexcept 说明符
+The `noexcept` specifier specifies whether a function could throw exceptions. It is an improved version of `throw()`.  
+`noexcept` 说明符用于指定一个函数是否可能抛出异常。它是 `throw()` 的改进版本。
 
 ```c++
-void func1() noexcept;        // does not throw
-void func2() noexcept(true);  // does not throw
-void func3() throw();         // does not throw
+void func1() noexcept;        // does not throw // 不抛出(异常)
+void func2() noexcept(true);  // does not throw // 不抛出(异常)
+void func3() throw();         // does not throw // 不抛出(异常)
 
-void func4() noexcept(false); // may throw
+void func4() noexcept(false); // may throw // 可能抛出(异常)
 ```
 
-Non-throwing functions are permitted to call potentially-throwing functions. Whenever an exception is thrown and the search for a handler encounters the outermost block of a non-throwing function, the function std::terminate is called.
+Non-throwing functions are permitted to call potentially-throwing functions. Whenever an exception is thrown and the search for a handler encounters the outermost block of a non-throwing function, the function std::terminate is called.  
+非抛出(异常)函数允许调用可能抛出异常的函数。如果在非抛出函数中抛出了异常，并且在寻找异常处理程序时到达了非抛出函数的最外层代码块，则会调用函数 `std::terminate`。  
 
 ```c++
-extern void f();  // potentially-throwing
+extern void f();  // potentially-throwing // 可能抛出异常
 void g() noexcept {
-    f();          // valid, even if f throws
-    throw 42;     // valid, effectively a call to std::terminate
+    f();          // valid, even if f throws // 有效，即使 `f` 抛出异常。
+    throw 42;     // valid, effectively a call to std::terminate // 有效，本质上相当于调用 `std::terminate`。
 }
 ```
 
 ### char32_t and char16_t
-Provides standard types for representing UTF-8 strings.
+### char32_t 和 char16_t
+Provides standard types for representing UTF-8 strings.  
+提供用于表示 UTF-8 字符串的标准类型。  
 ```c++
 char32_t utf8_str[] = U"\u0123";
 char16_t utf8_str[] = u"\u0123";
 ```
 
-### Raw string literals
-C++11 introduces a new way to declare string literals as "raw string literals". Characters issued from an escape sequence (tabs, line feeds, single backslashes, etc.) can be inputted raw while preserving formatting. This is useful, for example, to write literary text, which might contain a lot of quotes or special formatting. This can make your string literals easier to read and maintain.
+### Raw string literals  
+### 原始字符串字面量  
+C++11 introduces a new way to declare string literals as "raw string literals". Characters issued from an escape sequence (tabs, line feeds, single backslashes, etc.) can be inputted raw while preserving formatting. This is useful, for example, to write literary text, which might contain a lot of quotes or special formatting. This can make your string literals easier to read and maintain.  
+C++11 引入了一种新的声明字符串字面量的方法，称为“原始字符串字面量”（raw string literals）。使用这种方式，可以直接输入源于转义序列的字符（如制表符、换行符、单个反斜杠等），并保留其格式。这在编写包含大量引号或特殊格式的文本（如文学作品）时特别有用。这种特性可以使字符串字面量更易读、更易维护。
 
-A raw string literal is declared using the following syntax:
+A raw string literal is declared using the following syntax:  
+原始字符串字面量使用以下语法声明：
 ```
 R"delimiter(raw_characters)delimiter"
 ```
 where:
 * `delimiter` is an optional sequence of characters made of any source character except parentheses, backslashes and spaces.
-* `raw_characters` is any raw character sequence; must not contain the closing sequence `")delimiter"`.
-
+* `raw_characters` is any raw character sequence; must not contain the closing sequence `")delimiter"`.  
+其中：  
+- `delimiter` 是一个可选的字符序列，由任何源字符组成，但不能包含括号、反斜杠和空格。  
+- `raw_characters` 是任意的原始字符序列；但不能包含结束序列 `")delimiter"`。  
 Example:
 ```cpp
 // msg1 and msg2 are equivalent.
