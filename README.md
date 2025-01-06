@@ -2441,11 +2441,15 @@ Hello,
 ```
 
 ## C++11 Library Features
+## C++11库特性
 
 ### std::move
-`std::move` indicates that the object passed to it may have its resources transferred. Using objects that have been moved from should be used with care, as they can be left in an unspecified state (see: [What can I do with a moved-from object?](http://stackoverflow.com/questions/7027523/what-can-i-do-with-a-moved-from-object)).
+### std::move
+`std::move` indicates that the object passed to it may have its resources transferred. Using objects that have been moved from should be used with care, as they can be left in an unspecified state (see: [What can I do with a moved-from object?](http://stackoverflow.com/questions/7027523/what-can-i-do-with-a-moved-from-object)).  
+`std::move` 表示传递给它的对象可能会将其资源转移出去。对于已被移动的对象，应谨慎使用，因为它们可能会处于未指定的状态（参考：[移动后的对象可以做什么？](http://stackoverflow.com/questions/7027523/what-can-i-do-with-a-moved-from-object)）。
 
-A definition of `std::move` (performing a move is nothing more than casting to an rvalue reference):
+A definition of `std::move` (performing a move is nothing more than casting to an rvalue reference):  
+`std::move` 的定义（执行移动操作仅仅是将对象转换为右值引用）：
 ```c++
 template <typename T>
 typename remove_reference<T>::type&& move(T&& arg) {
@@ -2453,18 +2457,22 @@ typename remove_reference<T>::type&& move(T&& arg) {
 }
 ```
 
-Transferring `std::unique_ptr`s:
+Transferring `std::unique_ptr`s:  
+转移 `std::unique_ptr`：
 ```c++
-std::unique_ptr<int> p1 {new int{0}};  // in practice, use std::make_unique
-std::unique_ptr<int> p2 = p1; // error -- cannot copy unique pointers
-std::unique_ptr<int> p3 = std::move(p1); // move `p1` into `p3`
-                                         // now unsafe to dereference object held by `p1`
+std::unique_ptr<int> p1 {new int{0}};  // in practice, use std::make_unique // 实际使用中，请使用 std::make_unique
+std::unique_ptr<int> p2 = p1; // error -- cannot copy unique pointers // 错误 -- 无法复制 unique 指针
+std::unique_ptr<int> p3 = std::move(p1); // move `p1` into `p3` // 将 `p1` 移动到 `p3`
+                                         // now unsafe to dereference object held by `p1` // 现在解引用 `p1` 持有的对象是不安全的
 ```
 
 ### std::forward
-Returns the arguments passed to it while maintaining their value category and cv-qualifiers. Useful for generic code and factories. Used in conjunction with [`forwarding references`](#forwarding-references).
+### std::forward
+Returns the arguments passed to it while maintaining their value category and cv-qualifiers. Useful for generic code and factories. Used in conjunction with [`forwarding references`](#forwarding-references).  
+返回传递给它的参数，同时保持其值类别和 `cv` 限定符（const 和 volatile）。适用于泛型代码和工厂函数。通常与[**转发引用**](#forwarding-references)一起使用。  
 
-A definition of `std::forward`:
+A definition of `std::forward`:  
+`std::forward` 的定义：  
 ```c++
 template <typename T>
 T&& forward(typename remove_reference<T>::type& arg) {
@@ -2472,7 +2480,8 @@ T&& forward(typename remove_reference<T>::type& arg) {
 }
 ```
 
-An example of a function `wrapper` which just forwards other `A` objects to a new `A` object's copy or move constructor:
+An example of a function `wrapper` which just forwards other `A` objects to a new `A` object's copy or move constructor:  
+一个函数 `wrapper` 的示例，它仅将其他 `A` 对象转发给新的 `A` 对象的拷贝构造函数或移动构造函数：  
 ```c++
 struct A {
   A() = default;
@@ -2491,7 +2500,8 @@ wrapper(a); // copied
 wrapper(std::move(a)); // moved
 ```
 
-See also: [`forwarding references`](#forwarding-references), [`rvalue references`](#rvalue-references).
+See also: [`forwarding references`](#forwarding-references), [`rvalue references`](#rvalue-references).  
+另请参阅：[**转发引用**](#forwarding-references)，[**右值引用**](#rvalue-references)。
 
 ### std::thread
 The `std::thread` library provides a standard way to control threads, such as spawning and killing them. In the example below, multiple threads are spawned to do different calculations and then the program waits for all of them to finish.
