@@ -2504,30 +2504,36 @@ See also: [`forwarding references`](#forwarding-references), [`rvalue references
 另请参阅：[**转发引用**](#forwarding-references)，[**右值引用**](#rvalue-references)。
 
 ### std::thread
-The `std::thread` library provides a standard way to control threads, such as spawning and killing them. In the example below, multiple threads are spawned to do different calculations and then the program waits for all of them to finish.
+### std::thread
+The `std::thread` library provides a standard way to control threads, such as spawning and killing them. In the example below, multiple threads are spawned to do different calculations and then the program waits for all of them to finish.  
+`std::thread`库提供了一种标准的方式来控制线程，例如创建和终止线程。在下面的示例中，程序创建了多个线程来执行不同的计算操作，然后等待所有线程完成后再继续运行。  
 
 ```c++
 void foo(bool clause) { /* do something... */ }
 
 std::vector<std::thread> threadsVector;
 threadsVector.emplace_back([]() {
-  // Lambda function that will be invoked
+  // Lambda function that will be invoked // 将被调用的 Lambda 函数
 });
-threadsVector.emplace_back(foo, true);  // thread will run foo(true)
+threadsVector.emplace_back(foo, true);  // thread will run foo(true) // 线程将运行 `foo(true)`
 for (auto& thread : threadsVector) {
-  thread.join(); // Wait for threads to finish
+  thread.join(); // Wait for threads to finish // 等待线程结束
 }
 ```
 
 ### std::to_string
-Converts a numeric argument to a `std::string`.
+### std::to_string
+Converts a numeric argument to a `std::string`.  
+将数值参数转换为 `std::string` 类型的字符串。  
 ```c++
 std::to_string(1.2); // == "1.2"
 std::to_string(123); // == "123"
 ```
 
 ### Type traits
-Type traits defines a compile-time template-based interface to query or modify the properties of types.
+### Type traits(类型特性)
+Type traits defines a compile-time template-based interface to query or modify the properties of types.  
+**Type traits** 定义了一种基于模板的编译时接口，用于查询或修改类型的属性。
 ```c++
 static_assert(std::is_integral<int>::value);
 static_assert(std::is_same<int, int>::value);
@@ -2535,29 +2541,33 @@ static_assert(std::is_same<std::conditional<true, int, double>::type, int>::valu
 ```
 
 ### Smart pointers
-C++11 introduces new smart pointers: `std::unique_ptr`, `std::shared_ptr`, `std::weak_ptr`. `std::auto_ptr` now becomes deprecated and then eventually removed in C++17.
+### 智能指针
+C++11 introduces new smart pointers: `std::unique_ptr`, `std::shared_ptr`, `std::weak_ptr`. `std::auto_ptr` now becomes deprecated and then eventually removed in C++17.  
+C++11 引入了新的智能指针：`std::unique_ptr`、`std::shared_ptr` 和 `std::weak_ptr`。同时，`std::auto_ptr` 被标记为已弃用，并最终在 C++17 中被移除。
 
-`std::unique_ptr` is a non-copyable, movable pointer that manages its own heap-allocated memory. **Note: Prefer using the `std::make_X` helper functions as opposed to using constructors. See the sections for [std::make_unique](https://github.com/AnthonyCalandra/modern-cpp-features/blob/master/CPP14.md#stdmake_unique) and [std::make_shared](#stdmake_shared).**
+`std::unique_ptr` is a non-copyable, movable pointer that manages its own heap-allocated memory. **Note: Prefer using the `std::make_X` helper functions as opposed to using constructors. See the sections for [std::make_unique](https://github.com/AnthonyCalandra/modern-cpp-features/blob/master/CPP14.md#stdmake_unique) and [std::make_shared](#stdmake_shared).**  
+`std::unique_ptr` 是一种不可复制但可移动的指针，用于管理其自身堆分配的内存。**注意：建议使用 `std::make_X` 辅助函数，而不是直接使用构造函数。有关 [std::make_unique](https://github.com/AnthonyCalandra/modern-cpp-features/blob/master/CPP14.md#stdmake_unique) 和 [std::make_shared](#stdmake_shared) 的详细信息，请参阅相关章节。**
 ```c++
-std::unique_ptr<Foo> p1 { new Foo{} };  // `p1` owns `Foo`
+std::unique_ptr<Foo> p1 { new Foo{} };  // `p1` owns `Foo` // `p1` 拥有 `Foo` 的所有权
 if (p1) {
   p1->bar();
 }
 
 {
-  std::unique_ptr<Foo> p2 {std::move(p1)};  // Now `p2` owns `Foo`
+  std::unique_ptr<Foo> p2 {std::move(p1)};  // Now `p2` owns `Foo` // 现在 `p2` 拥有 `Foo` 的所有权
   f(*p2);
 
-  p1 = std::move(p2);  // Ownership returns to `p1` -- `p2` gets destroyed
+  p1 = std::move(p2);  // Ownership returns to `p1` -- `p2` gets destroyed  // 所有权返回给 `p1` —— `p2` 被销毁
 }
 
 if (p1) {
   p1->bar();
 }
-// `Foo` instance is destroyed when `p1` goes out of scope
+// `Foo` instance is destroyed when `p1` goes out of scope // 当 `p1` 超出作用域时，`Foo` 实例被销毁
 ```
 
-A `std::shared_ptr` is a smart pointer that manages a resource that is shared across multiple owners. A shared pointer holds a _control block_ which has a few components such as the managed object and a reference counter. All control block access is thread-safe, however, manipulating the managed object itself is *not* thread-safe.
+A `std::shared_ptr` is a smart pointer that manages a resource that is shared across multiple owners. A shared pointer holds a _control block_ which has a few components such as the managed object and a reference counter. All control block access is thread-safe, however, manipulating the managed object itself is *not* thread-safe.  
+`std::shared_ptr` 是一种智能指针，用于管理多个所有者共享的资源。`shared_ptr` 持有一个**控制块**，其中包含一些组件，例如被管理的对象和引用计数器。所有对控制块的访问都是线程安全的，但对被管理对象本身的操作**并不是**线程安全的。
 ```c++
 void foo(std::shared_ptr<T> t) {
   // Do something with `t`...
@@ -2572,7 +2582,8 @@ void baz(std::shared_ptr<T> t) {
 }
 
 std::shared_ptr<T> p1 {new T{}};
-// Perhaps these take place in another threads?
+// Perhaps these take place in another threads?  
+// 也许这些操作发生在其他线程中？  
 foo(p1);
 bar(p1);
 baz(p1);
