@@ -2590,15 +2590,17 @@ baz(p1);
 ```
 
 ### std::chrono
-The chrono library contains a set of utility functions and types that deal with _durations_, _clocks_, and _time points_. One use case of this library is benchmarking code:
+### std::chrono
+The chrono library contains a set of utility functions and types that deal with _durations_, _clocks_, and _time points_. One use case of this library is benchmarking code:  
+`chrono` 库包含一组用于处理 **持续时间**（_durations_）、**时钟**（_clocks_）和 **时间点**（_time points_）的实用功能和类型。该库的一个使用场景是对代码进行基准测试（benchmarking）。
 ```c++
 std::chrono::time_point<std::chrono::steady_clock> start, end;
 start = std::chrono::steady_clock::now();
-// Some computations...
+// Some computations... // 一些计算...
 end = std::chrono::steady_clock::now();
 
 std::chrono::duration<double> elapsed_seconds = end - start;
-double t = elapsed_seconds.count(); // t number of seconds, represented as a `double`
+double t = elapsed_seconds.count(); // t number of seconds, represented as a `double` // 表示为 `double` 类型的秒数（`t`）。
 ```
 
 ### Tuples
