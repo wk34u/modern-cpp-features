@@ -2604,9 +2604,12 @@ double t = elapsed_seconds.count(); // t number of seconds, represented as a `do
 ```
 
 ### Tuples
-Tuples are a fixed-size collection of heterogeneous values. Access the elements of a `std::tuple` by unpacking using [`std::tie`](#stdtie), or using `std::get`.
+### Tuples
+Tuples are a fixed-size collection of heterogeneous values. Access the elements of a `std::tuple` by unpacking using [`std::tie`](#stdtie), or using `std::get`.  
+元组（Tuples）是一个固定大小的异构值集合。可以通过使用 [`std::tie`](#stdtie) 解包或使用 `std::get` 来访问 `std::tuple` 的元素。  
 ```c++
 // `playerProfile` has type `std::tuple<int, const char*, const char*>`.
+// `playerProfile` 的类型是 `std::tuple<int, const char*, const char*>`。
 auto playerProfile = std::make_tuple(51, "Frans Nielsen", "NYI");
 std::get<0>(playerProfile); // 51
 std::get<1>(playerProfile); // "Frans Nielsen"
@@ -2614,7 +2617,9 @@ std::get<2>(playerProfile); // "NYI"
 ```
 
 ### std::tie
-Creates a tuple of lvalue references. Useful for unpacking `std::pair` and `std::tuple` objects. Use `std::ignore` as a placeholder for ignored values. In C++17, structured bindings should be used instead.
+### std::tie
+Creates a tuple of lvalue references. Useful for unpacking `std::pair` and `std::tuple` objects. Use `std::ignore` as a placeholder for ignored values. In C++17, structured bindings should be used instead.  
+创建一个左值引用的元组。对于解包 `std::pair` 和 `std::tuple` 对象非常有用。可以使用 `std::ignore` 作为占位符来忽略某些值。在 C++17 中，应该使用结构化绑定（structured bindings）来代替。  
 ```c++
 // With tuples...
 std::string playerName;
